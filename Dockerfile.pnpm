@@ -1,0 +1,34 @@
+FROM debian:bookworm-20240311
+
+RUN set -eux && \
+    apt-get update -qq && \
+    apt-get install -qq --no-install-recommends --no-install-suggests -y \
+    git ca-certificates zip curl && \
+    rm -rf /var/lib/apt/lists/*
+
+ARG PNPM_VERSION=9.0.1
+ARG NODE_VERSION=20.12.1
+
+RUN set -eux && \
+    export SHELL=/bin/bash && \
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
+
+SHELL ["/bin/bash", "-c"]
+
+RUN set -eux && \
+    source /root/.bashrc && \
+    pnpm env use --global $NODE_VERSION && \
+    pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
+    # pnpm config set registry https://registry.npmmirror.com && \
+    # https://github.com/nodejs/docker-node/blob/main/20/bookworm-slim/Dockerfile
+    ln -s /root/.local/share/pnpm/node /usr/local/bin/node && \
+    ln -s /root/.local/share/pnpm/nodejs /usr/local/bin/nodejs && \
+    ln -s /root/.local/share/pnpm/npm /usr/local/bin/npm && \
+    ln -s /root/.local/share/pnpm/npx /usr/local/bin/npx && \
+    ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm && \
+    echo 'alias ls="ls -lha --color=auto"' >> ~/.bashrc && \
+    for command in node npm npx pnpm; do echo -e "$(which $command)\t$($command --version)"; done
+
+WORKDIR /root
+# docker build -t yanhao98/runner-images:pnpm9-node20 -f Dockerfile.pnpm .
+# docker run --rm -it yanhao98/runner-images:pnpm9-node20
