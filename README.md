@@ -4,9 +4,9 @@
 
 ### pnpm
 
-- `pnpm9-node16` - Node `16.20.2` with pnpm `9.0.4`
-- `pnpm9-node18` - Node `18.20.2` with pnpm `9.0.4`
-- `pnpm9-node20` - Node `20.12.2` with pnpm `9.0.4`
+- `pnpm9-node16` - Node `16.20.2` with pnpm `9.0.4` ![size](https://img.shields.io/docker/image-size/yanhao98/runner-images/pnpm9-node16?label=size)
+- `pnpm9-node18` - Node `18.20.2` with pnpm `9.0.4` ![size](https://img.shields.io/docker/image-size/yanhao98/runner-images/pnpm9-node18?label=size)
+- `pnpm9-node20` - Node `20.12.2` with pnpm `9.0.4` ![size](https://img.shields.io/docker/image-size/yanhao98/runner-images/pnpm9-node20?label=size)
 
 ## Links
 <details> <summary>Reference Links</summary>
