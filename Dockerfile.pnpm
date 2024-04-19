@@ -6,8 +6,8 @@ RUN set -eux && \
     git ca-certificates zip curl && \
     rm -rf /var/lib/apt/lists/*
 
-ARG PNPM_VERSION=9.0.1
-ARG NODE_VERSION=16.20.1
+ARG PNPM_VERSION
+ARG NODE_VERSION
 
 RUN set -eux && \
     export SHELL=/bin/bash && \
@@ -30,5 +30,3 @@ RUN set -eux && \
     for command in node npm npx pnpm; do echo -e "$(which $command)\t$($command --version)"; done
 
 WORKDIR /root
-# docker build -t yanhao98/runner-images:pnpm9-node20 -f Dockerfile.pnpm .
-# docker run --rm -it yanhao98/runner-images:pnpm9-node20
