@@ -7,11 +7,20 @@
         {
             "customType": "regex",
             "fileMatch": "README.md",
-            "depNameTemplate": "pnpm",
             "matchStrings": [
                 "with pnpm `(?<currentValue>\\d+\\.\\d+\\.\\d+)`"
             ],
+            "depNameTemplate": "pnpm",
             "datasourceTemplate": "npm"
+        },
+        {
+            "customType": "regex",
+            "fileMatch": "README.md",
+            "matchStrings": [
+                "Node `(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+            ],
+            "depNameTemplate": "nodejs/node",
+            "datasourceTemplate": "github-tags"
         }
     ]
 }
