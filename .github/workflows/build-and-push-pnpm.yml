@@ -3,7 +3,7 @@ name: Build and Push :pnpmX-nodeX
 # 允许一个并发的部署
 concurrency:
   group: "build-and-push-pnpm"
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name != 'pull_request' }}
 
 on:
   push:
