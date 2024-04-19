@@ -20,7 +20,6 @@ RUN set -eux && \
     pnpm env use --global $NODE_VERSION && \
     pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
     # pnpm config set registry https://registry.npmmirror.com && \
-    # https://github.com/nodejs/docker-node/blob/main/20/bookworm-slim/Dockerfile
     ln -s /root/.local/share/pnpm/node /usr/local/bin/node && \
     ln -s /root/.local/share/pnpm/nodejs /usr/local/bin/nodejs && \
     ln -s /root/.local/share/pnpm/npm /usr/local/bin/npm && \

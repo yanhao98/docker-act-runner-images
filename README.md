@@ -15,4 +15,6 @@
 
 - https://github.com/fwilhe2/act-runner-image/blob/main/Dockerfile
 
+- https://github.com/nodejs/docker-node/blob/main/20/bookworm-slim/Dockerfile
+
 </details>
