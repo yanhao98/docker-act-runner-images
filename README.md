@@ -4,7 +4,7 @@
 
 ### pnpm
 
-- `pnpm9-node16` - Node `16.20.1` with pnpm `9.0.1`
+- `pnpm9-node16` - Node `16.20.2` with pnpm `9.0.1`
 - `pnpm9-node18` - Node `18.20.1` with pnpm `9.0.1`
 - `pnpm9-node20` - Node `20.12.1` with pnpm `9.0.1`
 
