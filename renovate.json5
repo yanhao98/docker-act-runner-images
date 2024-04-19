@@ -1,7 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
-        "config:recommended",
         "group:allNonMajor"
     ],
     "customManagers": [
@@ -21,7 +20,8 @@
                 "Node `(?<currentValue>\\d+\\.\\d+\\.\\d+)"
             ],
             "depNameTemplate": "nodejs/node",
-            "datasourceTemplate": "github-tags"
+            "datasourceTemplate": "github-tags",
+            "versioningTemplate": ""
         }
     ]
 }
