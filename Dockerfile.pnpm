@@ -17,10 +17,10 @@ SHELL ["/bin/bash", "-c"]
 
 RUN set -eux && \
     source /root/.bashrc && \
+    pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
     pnpm env use --global $NODE_VERSION && \
     pnpm store prune --force && \
     rm -rf $(pnpm config get store-dir) && \
-    pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
     # pnpm config set registry https://registry.npmmirror.com && \
     ln -s /root/.local/share/pnpm/node /usr/local/bin/node && \
     ln -s /root/.local/share/pnpm/nodejs /usr/local/bin/nodejs && \
