@@ -32,7 +32,4 @@ RUN set -eux && \
     echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc && \
     for command in node npm npx pnpm; do echo -e "$(which $command)\t\e[34m$($command --version)\e[0m"; done
 
-# COPY docker-entrypoint.sh /usr/local/bin/
-# ENTRYPOINT ["docker-entrypoint.sh"]
-
 WORKDIR /root
