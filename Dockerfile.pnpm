@@ -27,7 +27,11 @@ RUN set -eux && \
     ln -s /root/.local/share/pnpm/npm /usr/local/bin/npm && \
     ln -s /root/.local/share/pnpm/npx /usr/local/bin/npx && \
     ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm && \
+    echo -n > ~/.bashrc && \
     echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc && \
     for command in node npm npx pnpm; do echo -e "$(which $command)\t\e[34m$($command --version)\e[0m"; done
+
+# COPY docker-entrypoint.sh /usr/local/bin/
+# ENTRYPOINT ["docker-entrypoint.sh"]
 
 WORKDIR /root
