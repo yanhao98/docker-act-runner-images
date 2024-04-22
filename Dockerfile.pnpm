@@ -1,6 +1,8 @@
 FROM debian:bookworm-20240311
 ENV SHELL=/bin/bash
+# https://github.com/pnpm/pnpm/issues/4495#issuecomment-1317831712
 ENV PNPM_HOME=/root/.local/share/pnpm
+ENV PATH="${PATH}:${PNPM_HOME}"
 
 RUN set -eux && \
     apt-get update -qq && \
