@@ -1,4 +1,5 @@
 FROM debian:bookworm-20240311
+ENV SHELL=/bin/bash
 
 RUN set -eux && \
     apt-get update -qq && \
@@ -14,7 +15,6 @@ RUN set -eux && \
     curl -fsSL https://get.pnpm.io/install.sh | sh -
 
 SHELL ["/bin/bash", "-c"]
-
 RUN set -eux && \
     source /root/.bashrc && \
     pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
@@ -27,7 +27,7 @@ RUN set -eux && \
     ln -s /root/.local/share/pnpm/npm /usr/local/bin/npm && \
     ln -s /root/.local/share/pnpm/npx /usr/local/bin/npx && \
     ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm && \
-    echo 'alias ls="ls -lha --color=auto"' >> ~/.bashrc && \
+    echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc && \
     for command in node npm npx pnpm; do echo -e "$(which $command)\t\e[34m$($command --version)\e[0m"; done
 
 WORKDIR /root
