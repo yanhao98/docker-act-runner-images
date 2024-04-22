@@ -1,8 +1,9 @@
-FROM debian:bookworm-20240311
+# FROM debian:bookworm-20240311
+FROM debian:bookworm@sha256:e97ee92bf1e11a2de654e9f3da827d8dce32b54e0490ac83bfc65c8706568116
+
 ENV SHELL=/bin/bash
-# https://github.com/pnpm/pnpm/issues/4495#issuecomment-1317831712
-ENV PNPM_HOME=/root/.local/share/pnpm
-ENV PATH="${PATH}:${PNPM_HOME}"
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 RUN set -eux && \
     apt-get update -qq && \
@@ -12,24 +13,17 @@ RUN set -eux && \
 
 ARG PNPM_VERSION
 ARG NODE_VERSION
-
 RUN set -eux && \
     export SHELL=/bin/bash && \
     curl -fsSL https://get.pnpm.io/install.sh | sh -
 
-SHELL ["/bin/bash", "-c"]
+# SHELL ["/bin/bash", "-c"]
 RUN set -eux && \
-    source /root/.bashrc && \
+    # source /root/.bashrc && \
     pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
     pnpm env use --global $NODE_VERSION && \
     pnpm store prune --force && \
-    rm -rf $(pnpm config get store-dir) && \
-    # pnpm config set registry https://registry.npmmirror.com && \
-    ln -s /root/.local/share/pnpm/node /usr/local/bin/node && \
-    ln -s /root/.local/share/pnpm/nodejs /usr/local/bin/nodejs && \
-    ln -s /root/.local/share/pnpm/npm /usr/local/bin/npm && \
-    ln -s /root/.local/share/pnpm/npx /usr/local/bin/npx && \
-    ln -s /root/.local/share/pnpm/pnpm /usr/local/bin/pnpm && \
+    rm -rf $(pnpm sotre path) && \
     echo -n > ~/.bashrc && \
     echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc && \
     for command in node npm npx pnpm; do echo -e "$(which $command)\t\e[34m$($command --version)\e[0m"; done

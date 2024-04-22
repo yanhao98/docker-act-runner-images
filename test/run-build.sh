@@ -6,3 +6,4 @@ docker build \
     -t yanhao98/runner-images:pnpm9-node16 -f Dockerfile.pnpm .
 docker run -it --rm yanhao98/runner-images:pnpm9-node16 pnpm --version
 docker run -it --rm yanhao98/runner-images:pnpm9-node16 node --version
+docker run -it --rm yanhao98/runner-images:pnpm9-node16 uname -a
