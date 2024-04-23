@@ -1,25 +1,23 @@
-FROM debian:bookworm-20240311
-# FROM debian:bookworm@sha256:e97ee92bf1e11a2de654e9f3da827d8dce32b54e0490ac83bfc65c8706568116
+FROM debian:bookworm@sha256:e97ee92bf1e11a2de654e9f3da827d8dce32b54e0490ac83bfc65c8706568116
 
 ENV SHELL=/bin/bash
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
+ARG DEBIAN_FRONTEND=noninteractive
+ARG DEPENDENCIES="git ca-certificates zip curl"
 RUN set -eux && \
     apt-get update -qq && \
-    apt-get install -qq --no-install-recommends --no-install-suggests -y \
-    git ca-certificates zip curl && \
+    apt-get install -qq --no-install-recommends --no-install-suggests -y $DEPENDENCIES && \
     rm -rf /var/lib/apt/lists/*
 
 ARG PNPM_VERSION
 ARG NODE_VERSION
+
 RUN set -eux && \
-    export SHELL=/bin/bash && \
     curl -fsSL https://get.pnpm.io/install.sh | sh -
 
-# SHELL ["/bin/bash", "-c"]
 RUN set -eux && \
-    # source /root/.bashrc && \
     pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
     pnpm env use --global $NODE_VERSION && \
     pnpm store prune --force && \
