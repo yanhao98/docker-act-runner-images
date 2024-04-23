@@ -1,0 +1,77 @@
+name: Build and Push :pnpmX-nodeX
+
+# 允许一个并发的部署
+concurrency:
+  group: "build-and-push-pnpm"
+  cancel-in-progress: ${{ github.event_name != 'pull_request' }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Dockerfile.pnpm"
+      - "README.md"
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        node:
+          - 16
+          - 18
+          - 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Extract metadata
+        id: metadata
+        run: |
+          node_version=$(grep -oP "(?<=pnpm9-node${{ matrix.node }}\` - Node \`)[\d\.]+" README.md)
+          pnpm_version=$(grep -oP "(?<=pnpm9-node${{ matrix.node }}\` - Node \`$node_version\` with pnpm \`)[\d\.]+" README.md)
+          pnpm_major=$(echo $pnpm_version | cut -d. -f1)
+          docker_tags="yanhao98/runner-images:pnpm9-node${{ matrix.node }}"
+
+          echo "node_version=${node_version}" >> $GITHUB_OUTPUT   #16.20.1
+          echo "pnpm_version=${pnpm_version}" >> $GITHUB_OUTPUT   #9.0.1
+          echo "pnpm_major=${pnpm_major}" >> $GITHUB_OUTPUT       #9
+          echo "docker_tags=${docker_tags}" >> $GITHUB_OUTPUT
+
+      - name: Print metadata
+        run: |
+          echo -e "node_version: ${{ steps.metadata.outputs.node_version }}"
+          echo -e "pnpm_version: ${{ steps.metadata.outputs.pnpm_version }}"
+          echo -e "pnpm_major:   ${{ steps.metadata.outputs.pnpm_major }}"
+          echo -e "docker_tags:  ${{ steps.metadata.outputs.docker_tags }}"
+
+      # - name: 退出调试
+      #   if: ${{ github.actor == 'nektos/act' }}
+      #   run: exit 1
+
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request' && github.actor != 'nektos/act'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          file: ./Dockerfile.pnpm
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          pull: true
+          push: ${{ github.event_name != 'pull_request' && github.actor != 'nektos/act' }}
+          tags: ${{ steps.metadata.outputs.docker_tags }}
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            NODE_VERSION=${{ steps.metadata.outputs.node_version }}
+            PNPM_VERSION=${{ steps.metadata.outputs.pnpm_version }}
