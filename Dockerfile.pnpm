@@ -1,45 +1,46 @@
+# 🐟 base
 FROM debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb as base
-ARG DEPENDENCIES="git ca-certificates zip wget"
 RUN set -eux && \
-    apt-get update -qq && \
-    apt-get install -qq --no-install-recommends --no-install-suggests -y ${DEPENDENCIES} && \
+    # > 安装基础工具
+    apt-get update -qq && apt-get install -qq --no-install-recommends --no-install-suggests -y \
+    git ca-certificates zip wget && \
     apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/* && \
+    # > pnpm 配置文件
+    mkdir -p /root/.config/pnpm && \
+    echo "store-dir=/opt/hostedtoolcache/pnpm-store" > /root/.config/pnpm/rc && \
+    # > bash 配置文件
     echo -n > ~/.bashrc && \
     echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc
 
-# 🐟
+# 🐟 
 FROM base as downloader
+ARG TARGETPLATFORM
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ARG TARGETPLATFORM
-ARG PNPM_VERSION
-ARG NODE_VERSION
+ENV PNPM_VERSION="9.0.0"
 
 # > 安装 pnpm
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-    export ARCH="arm64"; \
-    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-    export ARCH="x64"; \
-    fi && \
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARCH="arm64"; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARCH="x64"; fi && \
     mkdir -p /pnpm && \
-    # https://github.com/pnpm/pnpm/releases
-    wget -O /pnpm/pnpm "https://github.com/pnpm/pnpm/releases/download/v$PNPM_VERSION/pnpm-linuxstatic-$ARCH" && \
+    RELEASES_URL="https://github.com/pnpm/pnpm/releases" && \
+    wget -nv -O /pnpm/pnpm "$RELEASES_URL/download/v$PNPM_VERSION/pnpm-linuxstatic-$ARCH" && \
     chmod +x /pnpm/pnpm
 
 # > 安装 Node.js
-RUN pnpm env use --global $NODE_VERSION && \
+RUN pnpm env use --global lts && \
+    pnpm env add --global 16.0.0 18.0.0 20.0.0 22.0.0 && \
     pnpm --version && node --version && npm --version && \
-    pnpm store prune --force && \
+    # pnpm store prune --force && \
     rm -rf /pnpm/store && \
     echo "pnpm version: $(pnpm --version)"
 
 # 🐟
-FROM base
-WORKDIR /workspace
 # https://pnpm.io/zh/docker
+FROM base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH" DEBIAN_FRONTEND=noninteractive
 
 COPY --from=downloader /pnpm /pnpm
 
-RUN pnpm config set store-dir /opt/hostedtoolcache/pnpm-store
+# RUN pnpm config set store-dir /opt/hostedtoolcache/pnpm-store
