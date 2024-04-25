@@ -1,8 +1,6 @@
 #!/bin/bash -eux
 IMAGE_NAME=yanhao98/runner-images:pnpm-local
-docker build \
-    --build-arg PNPM_VERSION=9.0.0 \
-    -t $IMAGE_NAME -f Dockerfile.pnpm .
+docker build -t $IMAGE_NAME -f Dockerfile.pnpm .
 
 docker image inspect $IMAGE_NAME --format='{{.Size}}'
 docker image history $IMAGE_NAME

@@ -5,27 +5,8 @@
         "group:allNonMajor",
         ":disableMajorUpdates",
         ":automergeMinor",
-        "docker:pinDigests"
+        "docker:pinDigests",
+        "regexManagers:dockerfileVersions"
     ],
-    "customManagers": [
-        {
-            "customType": "regex",
-            "fileMatch": "README.md",
-            "matchStrings": [
-                "with pnpm `(?<currentValue>\\d+\\.\\d+\\.\\d+)`"
-            ],
-            "depNameTemplate": "pnpm",
-            "datasourceTemplate": "npm"
-        },
-        {
-            "customType": "regex",
-            "fileMatch": "README.md",
-            "matchStrings": [
-                "Node `(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-            ],
-            "depNameTemplate": "nodejs/node",
-            "datasourceTemplate": "github-tags",
-            "versioningTemplate": ""
-        }
-    ]
+    "customManagers": []
 }

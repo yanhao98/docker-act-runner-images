@@ -17,7 +17,17 @@ FROM base as downloader
 ARG TARGETPLATFORM
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-ENV PNPM_VERSION="9.0.0"
+
+# renovate: datasource=npm depName=pnpm
+ARG PNPM_VERSION="9.0.0"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE16_VERSION="16.0.0"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE18_VERSION="18.0.0"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE20_VERSION="20.0.0"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE22_VERSION="22.0.0"
 
 # > 安装 pnpm
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARCH="arm64"; \
@@ -29,7 +39,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARCH="arm64"; \
 
 # > 安装 Node.js
 RUN pnpm env use --global lts && \
-    pnpm env add --global 16.0.0 18.0.0 20.0.0 22.0.0 && \
+    pnpm env add --global $NODE16_VERSION $NODE18_VERSION $NODE20_VERSION $NODE22_VERSION && \
     pnpm --version && node --version && npm --version && \
     # pnpm store prune --force && \
     rm -rf /pnpm/store && \
@@ -37,7 +47,7 @@ RUN pnpm env use --global lts && \
 
 # 🐟
 # https://pnpm.io/zh/docker
-FROM base
+FROM base as final
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH" DEBIAN_FRONTEND=noninteractive
 
