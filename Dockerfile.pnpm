@@ -19,13 +19,13 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 # renovate: datasource=npm depName=pnpm
-ARG PNPM_VERSION="9.0.0"
+ARG PNPM_VERSION="9.0.6"
 # renovate: datasource=github-tags depName=nodejs/node
-ARG NODE16_VERSION="16.0.0"
+ARG NODE16_VERSION="16.20.2"
 # renovate: datasource=github-tags depName=nodejs/node
-ARG NODE18_VERSION="18.0.0"
+ARG NODE18_VERSION="18.20.2"
 # renovate: datasource=github-tags depName=nodejs/node
-ARG NODE20_VERSION="20.0.0"
+ARG NODE20_VERSION="20.12.2"
 # renovate: datasource=github-tags depName=nodejs/node
 ARG NODE22_VERSION="22.0.0"
 
