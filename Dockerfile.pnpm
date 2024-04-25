@@ -1,62 +1,45 @@
-FROM debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb AS installer
+FROM debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb as base
+ARG DEPENDENCIES="git ca-certificates zip wget"
+RUN set -eux && \
+    apt-get update -qq && \
+    apt-get install -qq --no-install-recommends --no-install-suggests -y ${DEPENDENCIES} && \
+    apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/* && \
+    echo -n > ~/.bashrc && \
+    echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc
 
+# 🐟
+FROM base as downloader
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-ARG SHELL=/bin/bash
+ARG TARGETPLATFORM
 ARG PNPM_VERSION
 ARG NODE_VERSION
 
-ARG DEPENDENCIES="git ca-certificates zip curl"
+# > 安装 pnpm
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+    export ARCH="arm64"; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+    export ARCH="x64"; \
+    fi && \
+    mkdir -p /pnpm && \
+    # https://github.com/pnpm/pnpm/releases
+    wget -O /pnpm/pnpm "https://github.com/pnpm/pnpm/releases/download/v$PNPM_VERSION/pnpm-linuxstatic-$ARCH" && \
+    chmod +x /pnpm/pnpm
 
-RUN set -eux && \
-    apt-get update -qq && \
-    apt-get install -qq --no-install-recommends --no-install-suggests -y $DEPENDENCIES && \
-    apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/*
-
-RUN set -eux && \
-    curl -fsSL https://get.pnpm.io/install.sh | sh -
-
-RUN set -eux && \
-    pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
-    pnpm env use --global $NODE_VERSION && \
+# > 安装 Node.js
+RUN pnpm env use --global $NODE_VERSION && \
+    pnpm --version && node --version && npm --version && \
     pnpm store prune --force && \
-    rm -rf $(pnpm store path) && \
-    echo -n > ~/.bashrc && \
-    echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc && \
-    for command in node npm npx pnpm; do echo -e "$(which $command)\t\e[34m$($command --version)\e[0m"; done
+    rm -rf /pnpm/store && \
+    echo "pnpm version: $(pnpm --version)"
 
-# [Cleanup](https://github.com/catthehacker/docker_images/blob/04925419f668b6097d2a30aa068e4622ae063bfd/linux/ubuntu/scripts/js.sh#L85)
-RUN set -eux && \
-    apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/*
-
-# # 🧨
-FROM debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb
-
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# ARG DEPENDENCIES="git ca-certificates zip curl"
-ARG DEPENDENCIES="git ca-certificates zip"
-
-RUN set -eux && \
-    apt-get update -qq && \
-    apt-get install -qq --no-install-recommends --no-install-suggests -y $DEPENDENCIES && \
-    apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/*
-
-COPY --from=installer /pnpm /pnpm
-
-RUN set -eux && \
-    pnpm config set store-dir /opt/hostedtoolcache/pnpm-store && \
-    # pnpm env use --global $NODE_VERSION && \
-    # pnpm store prune --force && \
-    # rm -rf $(pnpm store path) && \
-    echo -n > ~/.bashrc && \
-    echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc && \
-    for command in node npm npx pnpm; do echo -e "$(which $command)\t\e[34m$($command --version)\e[0m"; done
-
+# 🐟
+FROM base
 WORKDIR /workspace
+# https://pnpm.io/zh/docker
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH" DEBIAN_FRONTEND=noninteractive
+
+COPY --from=downloader /pnpm /pnpm
+
+RUN pnpm config set store-dir /opt/hostedtoolcache/pnpm-store
