@@ -1,3 +1,4 @@
+name: Build and Push :gitea-act-runner
 concurrency:
   group: "group-build-and-push-gitea-act-runner"
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}

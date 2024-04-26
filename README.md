@@ -1,6 +1,6 @@
 # Runner Images
 
-## Images Tags
+## Images
 
 ### [:pnpm](https://hub.docker.com/r/yanhao98/runner-images/tags?name=pnpm)
 

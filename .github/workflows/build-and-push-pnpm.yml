@@ -1,3 +1,4 @@
+name: Build and Push :pnpm
 concurrency:
   group: "group-build-and-push-pnpm"
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
