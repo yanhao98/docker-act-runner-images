@@ -1,0 +1,59 @@
+# 🐟 base
+FROM debian:bookworm-slim@sha256:155280b00ee0133250f7159b567a07d7cd03b1645714c3a7458b2287b0ca83cb as base
+RUN set -eux && \
+    # > 安装基础工具
+    apt-get update -qq && apt-get install -qq --no-install-recommends --no-install-suggests -y \
+    git ca-certificates zip wget && \
+    apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/* && \
+    # > pnpm 配置文件
+    mkdir -p /root/.config/pnpm && \
+    echo "store-dir=/opt/hostedtoolcache/pnpm-store" > /root/.config/pnpm/rc && \
+    # > bash 配置文件
+    echo -n > ~/.bashrc && \
+    echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc
+
+# 🐟 
+FROM base as downloader
+ARG TARGETPLATFORM
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+# renovate: datasource=npm depName=pnpm
+ARG PNPM_VERSION="9.0.6"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE16_VERSION="16.20.2"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE18_VERSION="18.20.2"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE20_VERSION="20.12.2"
+# renovate: datasource=github-tags depName=nodejs/node
+ARG NODE22_VERSION="22.0.0"
+
+RUN set -eux && \
+    # > 安装 pnpm
+    if [ "$TARGETPLATFORM" = "linux/arm64" ]; then export ARCH="arm64"; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARCH="x64"; fi && \
+    mkdir -p /pnpm && \
+    RELEASES_URL="https://github.com/pnpm/pnpm/releases" && \
+    wget -nv -O /pnpm/pnpm "$RELEASES_URL/download/v$PNPM_VERSION/pnpm-linuxstatic-$ARCH" && \
+    chmod +x /pnpm/pnpm
+
+RUN set -eux && \
+    # > 安装 Node.js
+    pnpm env use --global lts && \
+    pnpm env add --global $NODE16_VERSION $NODE18_VERSION $NODE20_VERSION $NODE22_VERSION && \
+    pnpm env list && \
+    pnpm --version && node --version && npm --version && \
+    # pnpm store prune --force && \
+    rm -rf /pnpm/store && \
+    echo "pnpm version: $(pnpm --version)"
+
+# 🐟
+# https://pnpm.io/zh/docker
+FROM base as final
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH" DEBIAN_FRONTEND=noninteractive
+
+COPY --from=downloader /pnpm /pnpm
+
+# RUN pnpm config set store-dir /opt/hostedtoolcache/pnpm-store
