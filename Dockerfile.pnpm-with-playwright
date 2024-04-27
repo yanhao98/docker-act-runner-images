@@ -1,0 +1,3 @@
+FROM yanhao98/runner-images:pnpm
+
+RUN npx -y playwright install --with-deps
