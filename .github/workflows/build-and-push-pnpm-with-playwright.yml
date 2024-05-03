@@ -1,7 +1,7 @@
 name: Build and Push :pnpm-with-playwright
 concurrency:
-  group: "group-build-and-push-pnpm-with-playwright"
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: "group-build-and-push-pnpm-with-playwright-${{ github.event_name }}"
+  # cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 on:
   push:
     branches: [main]
