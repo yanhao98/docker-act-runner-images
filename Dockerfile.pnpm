@@ -27,7 +27,7 @@ ARG NODE18_VERSION="18.20.2"
 # renovate: datasource=github-tags depName=nodejs/node
 ARG NODE20_VERSION="20.13.1"
 # renovate: datasource=github-tags depName=nodejs/node
-ARG NODE22_VERSION="22.1.0"
+ARG NODE22_VERSION="22.2.0"
 
 RUN set -eux && \
     # > 安装 pnpm
