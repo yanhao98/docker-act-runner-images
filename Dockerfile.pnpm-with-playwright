@@ -1,3 +1,3 @@
-FROM yanhao98/runner-images:pnpm@sha256:7b18baab4c3bc5bac933bc06118c90abf35735ef9a1509cd443b069a0a24ebd1
+FROM yanhao98/runner-images:pnpm@sha256:f9a226ff416c7cca17d4d3bd81b5424ecab57625a0c607fcfb776497a3411e0b
 
 RUN npx -y playwright install --with-deps
