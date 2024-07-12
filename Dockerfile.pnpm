@@ -53,6 +53,7 @@ RUN set -eux && \
 FROM base as final
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH" DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Shanghai
 
 COPY --from=downloader /pnpm /pnpm
 
