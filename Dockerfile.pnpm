@@ -3,7 +3,7 @@ FROM debian:bookworm-slim@sha256:5f7d5664eae4a192c2d2d6cb67fc3f3c7891a8722cd2903
 RUN set -eux && \
     # > 安装基础工具
     apt-get update -qq && apt-get install -qq --no-install-recommends --no-install-suggests -y \
-    git ca-certificates zip wget && \
+    git ca-certificates zip curl && \
     apt-get clean && rm -rf /var/cache/* /var/log/* /var/lib/apt/lists/* /tmp/* && \
     # > pnpm 配置文件
     mkdir -p /root/.config/pnpm && \
@@ -35,7 +35,7 @@ RUN set -eux && \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARCH="x64"; fi && \
     mkdir -p /pnpm && \
     RELEASES_URL="https://github.com/pnpm/pnpm/releases" && \
-    wget -nv -O /pnpm/pnpm "$RELEASES_URL/download/v$PNPM_VERSION/pnpm-linuxstatic-$ARCH" && \
+    curl -sSL "$RELEASES_URL/download/v$PNPM_VERSION/pnpm-linuxstatic-$ARCH" -o /pnpm/pnpm && \
     chmod +x /pnpm/pnpm
 
 RUN set -eux && \
