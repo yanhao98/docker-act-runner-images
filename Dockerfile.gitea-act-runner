@@ -1,4 +1,4 @@
-FROM vegardit/gitea-act-runner:latest@sha256:3e5018a1ea6aa9ceebc2f6810ff6085cc54e112b9160d98b67cfe4f0eb3e575a
+FROM vegardit/gitea-act-runner:latest@sha256:a5ec192176190304aaee049bbe55e632a4cc84dab2316d6c1b602d37b8a8922d
 
 COPY --from=gitea/act_runner:nightly@sha256:8bbb3061ecd073437c68bd34038c92665898df3871d9fef3069efdc50a99138b \
     /usr/local/bin/act_runner /usr/local/bin/act_runner
