@@ -1,13 +1,25 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
-        "config:recommended",
-        "group:allNonMajor",
-        ":disableMajorUpdates",
-        // ":automergeMinor",
+        "config:base",
+        ":disableDependencyDashboard",
         ":automergeAll",
+        ":disableMajorUpdates",
+        ":semanticCommitTypeAll(chore)",
         "docker:pinDigests",
-        "regexManagers:dockerfileVersions"
+        "group:allNonMajor",
+        "customManagers:dockerfileVersions",
+        "customManagers:githubActionsVersions"
     ],
-    "customManagers": []
+    "labels": [
+        "dependencies"
+    ],
+    "packageRules": [
+        {
+            "matchPackagePatterns": [
+                "*"
+            ],
+            "stabilityDays": 7
+        }
+    ]
 }
