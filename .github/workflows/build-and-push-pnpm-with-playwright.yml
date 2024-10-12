@@ -34,7 +34,7 @@ jobs:
               echo "cache-to=type=registry,ref=yanhao98/runner-images:pnpm-with-playwright,mode=max" >> $GITHUB_OUTPUT
           fi
       - name: Build and Push :pnpm-with-playwright
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: ./Dockerfile.pnpm-with-playwright
           # cache-from: type=registry,ref=yanhao98/runner-images:gitea-act-runner-buildcache
