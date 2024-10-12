@@ -34,7 +34,7 @@ jobs:
               echo "cache-to=type=registry,ref=yanhao98/runner-images:gitea-act-runner-buildcache,mode=max" >> $GITHUB_OUTPUT
           fi
       - name: Build and Push :gitea-act-runner
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: ./Dockerfile.gitea-act-runner
           # cache-from: type=registry,ref=yanhao98/runner-images:gitea-act-runner-buildcache

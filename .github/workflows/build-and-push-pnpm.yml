@@ -34,7 +34,7 @@ jobs:
               echo "cache-to=type=registry,ref=yanhao98/runner-images:pnpm-buildcache,mode=max" >> $GITHUB_OUTPUT
           fi
       - name: Build and Push :pnpm
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: ./Dockerfile.pnpm
           # cache-from: type=registry,ref=yanhao98/runner-images:pnpm-buildcache
