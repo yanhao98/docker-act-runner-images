@@ -1,7 +1,9 @@
 FROM yanhao98/runner-images:pnpm@sha256:a2debbdc5c0b1bf26a6dee5ba775e8290daf4e1dc5b96ddaefcd2392a2abe1d5
 
-RUN npx -y playwright install --with-deps
+ARG DEBIAN_FRONTEND=noninteractive
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
+RUN npx -y playwright install --with-deps && chmod -R 777 /ms-playwright
 
 # https://playwright.dev/docs/docker#usage
 # https://mcr.microsoft.com/en-us/product/playwright/about
