@@ -1,6 +1,6 @@
 FROM vegardit/gitea-act-runner:0.2.11
 
-COPY --from=gitea/act_runner:nightly@sha256:c25f9f1d8cc1e19a06dfd084a2772e87055209ce6250f97561869175edffafd7 \
+COPY --from=gitea/act_runner:nightly@sha256:87bae9a89a1991390787178fac59e144cefe1d8a085db0147982faa8d2866e4e \
     /usr/local/bin/act_runner /usr/local/bin/act_runner
 
 RUN act_runner --version
