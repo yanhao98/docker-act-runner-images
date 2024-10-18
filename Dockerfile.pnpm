@@ -1,5 +1,5 @@
 # 🐟 base
-FROM debian:12.7-slim as base
+FROM debian:12.7-slim AS base
 RUN set -eux && \
     # > 安装基础工具
     apt-get update -qq && apt-get install -qq --no-install-recommends --no-install-suggests -y \
@@ -13,7 +13,7 @@ RUN set -eux && \
     echo 'alias ls="ls -lhA --color=auto"' >> ~/.bashrc
 
 # 🐟 
-FROM base as downloader
+FROM base AS downloader
 ARG TARGETPLATFORM
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -51,7 +51,7 @@ RUN set -eux && \
 
 # 🐟
 # https://pnpm.io/zh/docker
-FROM base as final
+FROM base AS final
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH" DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai

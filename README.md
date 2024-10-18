@@ -8,7 +8,7 @@
 
 ### [:gitea-act-runner](https://hub.docker.com/r/yanhao98/runner-images/tags?name=gitea-act-runner)
 
-base 镜像使用 [vegardit/gitea-act-runner](https://github.com/vegardit/docker-gitea-act-runner/blob/main/image/Dockerfile)。替换了 [act_runner](https://gitea.com/gitea/act_runner) 的版本为 [gitea/act_runner](https://hub.docker.com/r/gitea/act_runner/tags) 的 `nightly` tag 的版本。
+base 镜像使用 [vegardit/gitea-act-runner](https://github.com/vegardit/docker-gitea-act-runner/blob/main/image/Dockerfile)。替换了 [act_runner](https://gitea.com/gitea/act_runner) 的版本为 `gitea/act_runner` 的 `nightly` tag 的版本。
 
 
 ## Links
