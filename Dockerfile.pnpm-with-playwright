@@ -1,4 +1,4 @@
-FROM yanhao98/runner-images:pnpm@sha256:698c73ff4d2607da811302d6c6c86d117c2b419d6b2acc83f9b3dbf66f956de2
+FROM yanhao98/runner-images:pnpm@sha256:53606b98e6edb34ddd310c90597927715a9cff357fa7076c98358debb83c8df8
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
