@@ -1,5 +1,5 @@
 # 🐟 base
-FROM debian:12.8-slim AS base
+FROM debian:12.9-slim AS base
 RUN set -eux && \
     # > 安装基础工具
     apt-get update -qq && apt-get install -qq --no-install-recommends --no-install-suggests -y \
