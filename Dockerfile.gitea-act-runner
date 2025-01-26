@@ -1,6 +1,6 @@
 FROM vegardit/gitea-act-runner:0.2.11
 
-COPY --from=gitea/act_runner:nightly@sha256:dd1d206b79b61d293a0adfd1d816bd54258b32b6dc2917603d16b4c7c3af4a25 \
+COPY --from=gitea/act_runner:nightly@sha256:3fd0225c154cfe3212a0bf28166ddcce69d3c2bf7827257c79f596d7b6142cce \
     /usr/local/bin/act_runner /usr/local/bin/act_runner
 LABEL com.centurylinklabs.watchtower.enable="true"
 RUN act_runner --version
